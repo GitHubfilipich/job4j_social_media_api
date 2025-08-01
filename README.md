@@ -59,4 +59,4 @@ RESTful API для социальной медиа платформы, позв�
 - Аутентификация и авторизация: Spring Security
 
 - Документация API: Swagger или OpenAPI  
-  ![Build](https://github.com/GitHubfilipich/job4j_social_media_api/actions/workflows/build.yml/badge.svg)
+  ![Build](https://github.com/GitHubfilipich/job4j_social_media_api/actions/workflows/github-actions.yml/badge.svg)
