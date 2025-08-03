@@ -1,0 +1,6 @@
+CREATE TABLE media_user (
+    id       SERIAL PRIMARY KEY,
+    email    TEXT   UNIQUE NOT NULL,
+    password TEXT   NOT NULL,
+    name     TEXT   NOT NULL
+);
