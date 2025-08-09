@@ -1,13 +1,13 @@
 package ru.job4j.socialmediaapi.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Set;
 
 @Data
+@ToString(exclude = {"friends", "subscriptions"})
+@EqualsAndHashCode(exclude = {"friends", "subscriptions"})
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,6 +18,8 @@ public class User {
     private Integer id;
 
     private String email;
+
+    private String password;
 
     private String name;
 

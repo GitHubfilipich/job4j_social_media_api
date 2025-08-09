@@ -1,14 +1,14 @@
 package ru.job4j.socialmediaapi.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
+@ToString(exclude = {"images"})
+@EqualsAndHashCode(exclude = {"images"})
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
