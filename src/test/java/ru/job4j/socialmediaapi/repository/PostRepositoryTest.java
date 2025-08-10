@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
 import ru.job4j.socialmediaapi.model.Post;
 import ru.job4j.socialmediaapi.model.User;
 
@@ -127,5 +128,74 @@ class PostRepositoryTest {
         var result = postRepository.findById(post.getId());
 
         assertThat(result).isEmpty();
+    }
+
+    /**
+     * Проверяет успешный сценарий получения данных методом {@code findByAuthor}
+     */
+    @Test
+    public void whenFindByAuthorThenGetData() {
+        var posts = getPosts(3);
+
+        var author = posts.get(0).getAuthor();
+        posts.get(1).setAuthor(author);
+
+        posts.forEach(postRepository::save);
+
+        var result = postRepository.findByAuthor(author);
+
+        assertThat(result)
+                .usingRecursiveComparison()
+                .withComparatorForType(Comparator.comparing((LocalDateTime dt) -> dt.truncatedTo(ChronoUnit.SECONDS)),
+                        LocalDateTime.class)
+                .ignoringFields("author.friends", "author.subscriptions", "images")
+                .isEqualTo(posts.subList(0, 2));
+    }
+
+    /**
+     * Проверяет успешный сценарий получения данных методом
+     * {@code findByCreatedAtGreaterThanEqualAndCreatedAtLessThanEqual}
+     */
+    @Test
+    public void whenFindByCreatedAtGreaterThanEqualAndCreatedAtLessThanEqualThenGetData() {
+        var posts = getPosts(4);
+        posts.get(0).setCreatedAt(LocalDateTime.now().minusDays(2));
+        posts.get(3).setCreatedAt(LocalDateTime.now().plusDays(2));
+
+        posts.forEach(postRepository::save);
+
+        var start = LocalDateTime.now().minusDays(1);
+        var end = LocalDateTime.now().plusDays(1);
+        var result = postRepository.findByCreatedAtGreaterThanEqualAndCreatedAtLessThanEqual(start, end);
+
+        assertThat(result)
+                .usingRecursiveComparison()
+                .withComparatorForType(Comparator.comparing((LocalDateTime dt) -> dt.truncatedTo(ChronoUnit.SECONDS)),
+                        LocalDateTime.class)
+                .ignoringFields("author.friends", "author.subscriptions", "images")
+                .isEqualTo(posts.subList(1, 3));
+    }
+
+    /**
+     * Проверяет успешный сценарий получения данных методом {@code findByOrderByCreatedAtDesc}
+     */
+    @Test
+    public void whenFindByOrderByCreatedAtDescThenGetData() {
+        var posts = getPosts(4);
+        posts.get(1).setCreatedAt(LocalDateTime.now().plusDays(1));
+        posts.get(2).setCreatedAt(LocalDateTime.now().plusDays(2));
+        posts.get(3).setCreatedAt(LocalDateTime.now().plusDays(3));
+        posts.forEach(postRepository::save);
+
+        var expected = List.of(posts.get(3), posts.get(2), posts.get(1));
+
+        var result = postRepository.findByOrderByCreatedAtDesc(Pageable.ofSize(3));
+
+        assertThat(result.getContent())
+                .usingRecursiveComparison()
+                .withComparatorForType(Comparator.comparing((LocalDateTime dt) -> dt.truncatedTo(ChronoUnit.SECONDS)),
+                        LocalDateTime.class)
+                .ignoringFields("author.friends", "author.subscriptions", "images")
+                .isEqualTo(expected);
     }
 }
