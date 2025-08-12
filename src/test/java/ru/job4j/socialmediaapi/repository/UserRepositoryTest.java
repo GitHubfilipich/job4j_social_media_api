@@ -2,19 +2,17 @@ package ru.job4j.socialmediaapi.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import ru.job4j.socialmediaapi.model.User;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DataJpaTest
 class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
@@ -27,7 +25,7 @@ class UserRepositoryTest {
     private List<User> getUsers(int count) {
         var users = new ArrayList<User>();
         for (int i = 0; i < count; i++) {
-            var user = new User(null, "email" + i, "password" + i, "name" + i, Set.of(), Set.of());
+            var user = new User(null, "email" + i, "password" + i, "name" + i, new HashSet<>(), new HashSet<>());
             users.add(user);
         }
         return users;
@@ -114,5 +112,69 @@ class UserRepositoryTest {
         var result = userRepository.findById(user.getId());
 
         assertThat(result).isEmpty();
+    }
+
+    /**
+     * Проверяет успешный сценарий получения данных методом {@code findByEmailAndPassword}
+     */
+    @Test
+    void whenFindByEmailAndPasswordThenGetData() {
+        var users = getUsers(3);
+        var user = users.get(1);
+        users.get(1).setEmail("NewEmail");
+        users.get(1).setPassword("NewPassword");
+        users.forEach(userRepository::save);
+
+        var result = userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword());
+
+        assertThat(result).isNotEmpty();
+        assertThat(result.get())
+                .usingRecursiveComparison()
+                .ignoringFields("friends", "subscriptions")
+                .isEqualTo(user);
+    }
+
+    /**
+     * Проверяет успешный сценарий получения данных методом {@code findSubscribersByPublisherId}
+     */
+    @Test
+    void whenFindSubscribersByPublisherIdThenGetData() {
+        var users = getUsers(4);
+        users.forEach(userRepository::save);
+
+        users.get(0).getSubscriptions().add(users.get(1));
+        users.get(1).getSubscriptions().addAll(List.of(users.get(0), users.get(2), users.get(3)));
+        users.get(2).getSubscriptions().addAll(List.of(users.get(0), users.get(1), users.get(3)));
+        users.get(3).getSubscriptions().add(users.get(0));
+        users.forEach(userRepository::save);
+
+        var user = users.get(3);
+        var expected = List.of(users.get(1), users.get(2));
+
+        var result = userRepository.findSubscribersByPublisherId(user.getId());
+
+        assertThat(result).containsExactlyInAnyOrderElementsOf(expected);
+    }
+
+    /**
+     * Проверяет успешный сценарий получения данных методом {@code findFriendsByUserId}
+     */
+    @Test
+    void whenFindFriendsByUserIdThenGetData() {
+        var users = getUsers(4);
+        users.forEach(userRepository::save);
+
+        users.get(0).getFriends().add(users.get(1));
+        users.get(1).getFriends().addAll(List.of(users.get(2), users.get(3)));
+        users.get(2).getFriends().addAll(List.of(users.get(0), users.get(1), users.get(3)));
+        users.get(3).getFriends().add(users.get(0));
+        users.forEach(userRepository::save);
+
+        var user = users.get(0);
+        var expected = List.of(users.get(1), users.get(2), users.get(3));
+
+        var result = userRepository.findFriendsByUserId(user.getId());
+
+        assertThat(result).containsExactlyInAnyOrderElementsOf(expected);
     }
 }

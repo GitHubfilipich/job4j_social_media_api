@@ -2,9 +2,8 @@ package ru.job4j.socialmediaapi.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import ru.job4j.socialmediaapi.model.Message;
 import ru.job4j.socialmediaapi.model.User;
 
@@ -17,8 +16,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DataJpaTest
 class MessageRepositoryTest {
     @Autowired
     private MessageRepository messageRepository;

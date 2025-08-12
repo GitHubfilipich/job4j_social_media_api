@@ -26,16 +26,16 @@ public class User {
     @ManyToMany
     @JoinTable(
             name = "user_friend",
-            joinColumns = {@JoinColumn(name = "friend_id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id")}
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "friend_id")}
     )
     private Set<User> friends;
 
     @ManyToMany
     @JoinTable(
             name = "user_subscription",
-            joinColumns = {@JoinColumn(name = "publisher_id")},
-            inverseJoinColumns = {@JoinColumn(name = "subscriber_id")}
+            joinColumns = {@JoinColumn(name = "subscriber_id")},
+            inverseJoinColumns = {@JoinColumn(name = "publisher_id")}
     )
     private Set<User> subscriptions;
 }

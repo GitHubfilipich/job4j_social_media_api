@@ -2,9 +2,8 @@ package ru.job4j.socialmediaapi.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import ru.job4j.socialmediaapi.model.Image;
 import ru.job4j.socialmediaapi.model.Post;
 import ru.job4j.socialmediaapi.model.User;
@@ -18,8 +17,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DataJpaTest
 class ImageRepositoryTest {
     @Autowired
     private ImageRepository imageRepository;
@@ -133,5 +131,24 @@ class ImageRepositoryTest {
         var result = imageRepository.findById(image.getId());
 
         assertThat(result).isEmpty();
+    }
+
+    /**
+     * Проверяет успешный сценарий удаления данных поста методом {@code deletePostImage}
+     */
+    @Test
+    public void whenDeletePostImageThenGetDataWithoutDeleted() {
+        var images = getImages(3);
+        images.forEach(imageRepository::save);
+        var postId = images.get(1).getPost().getId();
+
+        var result = imageRepository.deletePostImage(postId);
+        var remainingImages = imageRepository.findAll();
+
+        assertThat(result).isEqualTo(1);
+        assertThat(remainingImages)
+                .isNotEmpty()
+                .hasSize(2)
+                .allSatisfy(image -> assertThat(image.getPost().getId()).isNotEqualTo(postId));
     }
 }
