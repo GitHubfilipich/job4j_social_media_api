@@ -23,7 +23,7 @@ public class User {
 
     private String name;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_friend",
             joinColumns = {@JoinColumn(name = "user_id")},
@@ -31,7 +31,7 @@ public class User {
     )
     private Set<User> friends;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_subscription",
             joinColumns = {@JoinColumn(name = "subscriber_id")},
