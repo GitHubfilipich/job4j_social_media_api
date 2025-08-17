@@ -22,8 +22,18 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
+    public List<User> findAllWithFriendsAndSubscriptions() {
+        return userRepository.findAllWithFriendsAndSubscriptions();
+    }
+
+    @Override
     public Optional<User> findById(int id) {
         return userRepository.findById(id);
+    }
+
+    @Override
+    public Optional<User> findByIdWithFriendsAndSubscriptions(int id) {
+        return userRepository.findByIdWithFriendsAndSubscriptions(id);
     }
 
     @Override
@@ -43,5 +53,4 @@ public class SimpleUserService implements UserService {
         userRepository.delete(user);
         return true;
     }
-
 }

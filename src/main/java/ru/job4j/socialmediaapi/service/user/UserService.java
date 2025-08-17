@@ -10,6 +10,8 @@ public interface UserService {
 
     List<User> findAll();
 
+    List<User> findAllWithFriendsAndSubscriptions();
+
     Optional<User> findById(int id);
 
     @Transactional
@@ -20,4 +22,6 @@ public interface UserService {
 
     @Transactional
     boolean delete(User user);
+
+    Optional<User> findByIdWithFriendsAndSubscriptions(int id);
 }

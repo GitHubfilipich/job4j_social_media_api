@@ -33,7 +33,7 @@ class SimpleUserServiceTest {
     }
 
     private void clearTables() {
-        var users = userService.findAll();
+        var users = userService.findAllWithFriendsAndSubscriptions();
         users.forEach(user -> {
             user.getFriends().clear();
             user.getSubscriptions().clear();

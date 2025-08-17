@@ -1,5 +1,6 @@
 package ru.job4j.socialmediaapi.repository;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -34,4 +35,12 @@ public interface UserRepository extends ListCrudRepository<User, Integer> {
             where uf.friend_id = :id
             """, nativeQuery = true)
     List<User> findFriendsByUserId(@Param("id") int id);
+
+    @EntityGraph(attributePaths = {"friends", "subscriptions"})
+    @Query("SELECT user FROM User user")
+    List<User> findAllWithFriendsAndSubscriptions();
+
+    @EntityGraph(attributePaths = {"friends", "subscriptions"})
+    @Query("SELECT user FROM User user WHERE user.id = :id")
+    Optional<User> findByIdWithFriendsAndSubscriptions(@Param("id") int id);
 }

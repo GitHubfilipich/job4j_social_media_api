@@ -47,8 +47,10 @@ public class SimpleSubscribeService implements SubscribeService {
     public boolean acceptFriendRequest(FriendRequest friendRequest) {
         friendRequest.setStatus(RequestStatus.ACCEPTED);
 
-        User author = friendRequest.getAuthor();
-        User receiver = friendRequest.getReceiver();
+        User author = userService.findByIdWithFriendsAndSubscriptions(friendRequest.getAuthor().getId())
+                .orElseThrow();
+        User receiver = userService.findByIdWithFriendsAndSubscriptions(friendRequest.getReceiver().getId())
+                .orElseThrow();
 
         author.getFriends().add(receiver);
         userService.update(author);

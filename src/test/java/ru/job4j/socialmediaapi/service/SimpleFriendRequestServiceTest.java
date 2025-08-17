@@ -12,14 +12,13 @@ import ru.job4j.socialmediaapi.model.enums.RequestStatus;
 import ru.job4j.socialmediaapi.service.friendrequest.SimpleFriendRequestService;
 import ru.job4j.socialmediaapi.service.user.UserService;
 
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -43,7 +42,7 @@ class SimpleFriendRequestServiceTest {
 
     private void clearTables() {
         friendRequestService.deleteAll();
-        var users = userService.findAll();
+        var users = userService.findAllWithFriendsAndSubscriptions();
         users.forEach(user -> {
             user.getFriends().clear();
             user.getSubscriptions().clear();
@@ -74,18 +73,14 @@ class SimpleFriendRequestServiceTest {
         friendRequest.setReceiver(users.get(1));
 
         var result = friendRequestService.save(friendRequest);
-        var requests = friendRequestService.findAll();
+        var savedRequest = friendRequestService.findAll().get(0);
 
         assertThat(result).isTrue();
-        assertThat(requests)
-                .isNotEmpty()
-                .hasSize(1)
-                .first()
-                .usingRecursiveComparison()
-                .ignoringFields("author.friends", "author.subscriptions", "receiver.friends", "receiver.subscriptions")
-                .withComparatorForType(Comparator.comparing((LocalDateTime dt) -> dt.truncatedTo(ChronoUnit.SECONDS)),
-                        LocalDateTime.class)
-                .isEqualTo(friendRequest);
+        assertThat(savedRequest.getAuthor()).isEqualTo(friendRequest.getAuthor());
+        assertThat(savedRequest.getReceiver()).isEqualTo(friendRequest.getReceiver());
+        assertThat(savedRequest.getStatus()).isEqualTo(RequestStatus.PENDING);
+        assertThat(savedRequest.getCreatedAt())
+                .isCloseTo(friendRequest.getCreatedAt(), within(1, ChronoUnit.SECONDS));
     }
 
     /**
@@ -106,12 +101,11 @@ class SimpleFriendRequestServiceTest {
         var updatedRequest = friendRequestService.findAll().get(0);
 
         assertThat(result).isTrue();
-        assertThat(updatedRequest)
-                .usingRecursiveComparison()
-                .withComparatorForType(Comparator.comparing((LocalDateTime dt) -> dt.truncatedTo(ChronoUnit.SECONDS)),
-                        LocalDateTime.class)
-                .ignoringFields("author.friends", "author.subscriptions", "images")
-                .isEqualTo(friendRequest);
+        assertThat(updatedRequest.getAuthor()).isEqualTo(friendRequest.getAuthor());
+        assertThat(updatedRequest.getReceiver()).isEqualTo(friendRequest.getReceiver());
+        assertThat(updatedRequest.getStatus()).isEqualTo(RequestStatus.ACCEPTED);
+        assertThat(updatedRequest.getCreatedAt())
+                .isCloseTo(friendRequest.getCreatedAt(), within(1, ChronoUnit.SECONDS));
     }
 
     /**

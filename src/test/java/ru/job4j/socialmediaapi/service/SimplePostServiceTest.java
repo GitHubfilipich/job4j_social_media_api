@@ -43,7 +43,7 @@ class SimplePostServiceTest {
         var posts = postService.findAll();
         posts.forEach(postService::delete);
 
-        var users = userService.findAll();
+        var users = userService.findAllWithFriendsAndSubscriptions();
         users.forEach(user -> {
             user.getFriends().clear();
             user.getSubscriptions().clear();

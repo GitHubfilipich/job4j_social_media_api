@@ -43,7 +43,7 @@ class SimpleSubscribeServiceTest {
     private void clearTables() {
         friendRequestService.findAll().forEach(friendRequestService::delete);
 
-        var users = userService.findAll();
+        var users = userService.findAllWithFriendsAndSubscriptions();
         users.forEach(user -> {
             user.getFriends().clear();
             user.getSubscriptions().clear();
@@ -133,8 +133,8 @@ class SimpleSubscribeServiceTest {
         var request = friendRequestService.findAll().get(0);
 
         var result = subscribeService.acceptFriendRequest(request);
-        sender = userService.findById(sender.getId()).orElseThrow();
-        receiver = userService.findById(receiver.getId()).orElseThrow();
+        sender = userService.findByIdWithFriendsAndSubscriptions(sender.getId()).orElseThrow();
+        receiver = userService.findByIdWithFriendsAndSubscriptions(receiver.getId()).orElseThrow();
 
         assertThat(result).isTrue();
         assertThat(request.getStatus()).isEqualTo(RequestStatus.ACCEPTED);
