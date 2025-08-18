@@ -53,4 +53,10 @@ public class SimpleUserService implements UserService {
         userRepository.delete(user);
         return true;
     }
+
+    @Override
+    public boolean deleteById(int id) {
+        userRepository.deleteById(id);
+        return true;
+    }
 }

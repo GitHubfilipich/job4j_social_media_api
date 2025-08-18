@@ -7,6 +7,7 @@ import ru.job4j.socialmediaapi.repository.PostRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -17,6 +18,11 @@ public class SimplePostService implements PostService {
     @Override
     public List<Post> findAll() {
         return postRepository.findAll();
+    }
+
+    @Override
+    public Optional<Post> findById(int id) {
+        return postRepository.findById(id);
     }
 
     @Override
@@ -35,6 +41,12 @@ public class SimplePostService implements PostService {
     @Override
     public boolean delete(Post post) {
         postRepository.delete(post);
+        return true;
+    }
+
+    @Override
+    public boolean deleteById(int id) {
+        postRepository.deleteById(id);
         return true;
     }
 }

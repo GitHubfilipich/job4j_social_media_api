@@ -4,6 +4,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.job4j.socialmediaapi.model.Post;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PostService {
 
@@ -17,4 +18,9 @@ public interface PostService {
 
     @Transactional
     boolean delete(Post post);
+
+    Optional<Post> findById(int id);
+
+    @Transactional
+    boolean deleteById(int id);
 }

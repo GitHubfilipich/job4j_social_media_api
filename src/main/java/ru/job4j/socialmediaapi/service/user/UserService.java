@@ -24,4 +24,6 @@ public interface UserService {
     boolean delete(User user);
 
     Optional<User> findByIdWithFriendsAndSubscriptions(int id);
+
+    boolean deleteById(int id);
 }
