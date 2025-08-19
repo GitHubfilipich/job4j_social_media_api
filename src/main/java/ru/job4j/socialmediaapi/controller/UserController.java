@@ -39,9 +39,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .location(uri)
                     .body(user);
-        } else {
-            return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.notFound().build();
     }
 
     @PutMapping
@@ -56,9 +55,8 @@ public class UserController {
     public ResponseEntity<Void> change(@RequestBody User user) {
         if (userService.update(user)) {
             return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")

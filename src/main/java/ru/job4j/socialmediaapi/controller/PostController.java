@@ -39,9 +39,8 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .location(uri)
                     .body(post);
-        } else {
-            return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.notFound().build();
     }
 
     @PutMapping
@@ -56,9 +55,8 @@ public class PostController {
     public ResponseEntity<Void> change(@RequestBody Post post) {
         if (postService.update(post)) {
             return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
