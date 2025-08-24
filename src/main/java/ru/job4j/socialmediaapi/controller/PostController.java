@@ -8,8 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.job4j.socialmediaapi.dto.UserPostsDto;
 import ru.job4j.socialmediaapi.model.Post;
 import ru.job4j.socialmediaapi.service.post.PostService;
+
+import java.util.List;
 
 @Validated
 @AllArgsConstructor
@@ -26,6 +29,12 @@ public class PostController {
         return postService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/by-users")
+    public ResponseEntity<List<UserPostsDto>> getPostsByUsers(@RequestParam("id") List<Integer> ids) {
+        List<UserPostsDto> postsDtos = postService.getUserPostsDtosByUsers(ids);
+        return ResponseEntity.ok(postsDtos);
     }
 
     @PostMapping
