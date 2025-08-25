@@ -45,7 +45,8 @@ class SimpleUserServiceTest {
     private List<User> getUsers(int count) {
         var users = new ArrayList<User>();
         for (int i = 0; i < count; i++) {
-            var user = new User(null, "email" + i, "password" + i, "name" + i, new HashSet<>(), new HashSet<>());
+            var user = new User(null, "email@email.com" + i, "password" + i, "name" + i, new HashSet<>(),
+                    new HashSet<>());
             users.add(user);
         }
         return users;

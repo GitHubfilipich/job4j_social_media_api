@@ -25,7 +25,8 @@ class UserRepositoryTest {
     private List<User> getUsers(int count) {
         var users = new ArrayList<User>();
         for (int i = 0; i < count; i++) {
-            var user = new User(null, "email" + i, "password" + i, "name" + i, new HashSet<>(), new HashSet<>());
+            var user = new User(null, "email@email.com" + i, "password" + i, "name" + i, new HashSet<>(),
+                    new HashSet<>());
             users.add(user);
         }
         return users;
@@ -121,7 +122,7 @@ class UserRepositoryTest {
     void whenFindByEmailAndPasswordThenGetData() {
         var users = getUsers(3);
         var user = users.get(1);
-        users.get(1).setEmail("NewEmail");
+        users.get(1).setEmail("NewEmail@email.com");
         users.get(1).setPassword("NewPassword");
         users.forEach(userRepository::save);
 

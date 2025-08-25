@@ -1,5 +1,6 @@
 package ru.job4j.socialmediaapi.controller;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.job4j.socialmediaapi.model.User;
+import ru.job4j.socialmediaapi.model.validation.Operation;
 import ru.job4j.socialmediaapi.service.user.UserService;
 
 @Validated
@@ -29,7 +31,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> save(@RequestBody User user) {
+    @Validated(Operation.OnCreate.class)
+    public ResponseEntity<User> save(@Valid @RequestBody User user) {
         if (userService.save(user)) {
             var uri = ServletUriComponentsBuilder
                     .fromCurrentRequest()
@@ -44,7 +47,8 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody User user) {
+    @Validated(Operation.OnUpdate.class)
+    public ResponseEntity<Void> update(@Valid @RequestBody User user) {
         if (userService.update(user)) {
             return ResponseEntity.ok().build();
         }
@@ -52,7 +56,8 @@ public class UserController {
     }
 
     @PatchMapping
-    public ResponseEntity<Void> change(@RequestBody User user) {
+    @Validated(Operation.OnUpdate.class)
+    public ResponseEntity<Void> change(@Valid @RequestBody User user) {
         if (userService.update(user)) {
             return ResponseEntity.ok().build();
         }
@@ -60,7 +65,10 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeById(@PathVariable("id") int id) {
+    public ResponseEntity<Void> removeById(@PathVariable("id")
+                                           @NotNull
+                                           @Min(value = 1, message = "номер ресурса должен быть 1 и более")
+                                           int id) {
         if (userService.deleteById(id)) {
             return ResponseEntity.noContent().build();
         }

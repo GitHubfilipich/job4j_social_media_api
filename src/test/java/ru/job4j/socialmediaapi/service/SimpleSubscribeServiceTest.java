@@ -57,7 +57,8 @@ class SimpleSubscribeServiceTest {
     private List<User> getUsers(int count) {
         var users = new java.util.ArrayList<User>();
         for (int i = 0; i < count; i++) {
-            var user = new User(null, "email" + i, "password" + i, "name" + i, new HashSet<>(), new HashSet<>());
+            var user = new User(null, "email@email.com" + i, "password" + i, "name" + i, new HashSet<>(),
+                    new HashSet<>());
             userService.save(user);
             users.add(user);
         }

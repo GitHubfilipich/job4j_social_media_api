@@ -31,7 +31,8 @@ class PostRepositoryTest {
     private List<Post> getPosts(int count) {
         var posts = new ArrayList<Post>();
         for (int i = 0; i < count; i++) {
-            var user = new User(null, "email" + i, "password" + i, "name" + i, new HashSet<>(), new HashSet<>());
+            var user = new User(null, "email@email.com" + i, "password" + i, "name" + i, new HashSet<>(),
+                    new HashSet<>());
             userRepository.save(user);
             var post = new Post(null, user, "title" + i, "content" + i, Set.of(), LocalDateTime.now());
             posts.add(post);

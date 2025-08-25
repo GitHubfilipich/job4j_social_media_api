@@ -36,7 +36,7 @@ class ImageRepositoryTest {
     private List<Image> getImages(int count) {
         var images = new ArrayList<Image>();
         for (int i = 0; i < count; i++) {
-            var user = new User(null, "email" + i, "password" + i, "name" + i, Set.of(), Set.of());
+            var user = new User(null, "email@email.com" + i, "password" + i, "name" + i, Set.of(), Set.of());
             userRepository.save(user);
             var post = new Post(null, user, "title" + i, "content" + i, Set.of(), LocalDateTime.now());
             postRepository.save(post);

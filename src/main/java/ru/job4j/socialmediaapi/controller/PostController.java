@@ -1,6 +1,8 @@
 package ru.job4j.socialmediaapi.controller;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.job4j.socialmediaapi.dto.UserPostsDto;
 import ru.job4j.socialmediaapi.model.Post;
+import ru.job4j.socialmediaapi.model.validation.Operation;
 import ru.job4j.socialmediaapi.service.post.PostService;
 
 import java.util.List;
@@ -32,13 +35,22 @@ public class PostController {
     }
 
     @GetMapping("/by-users")
-    public ResponseEntity<List<UserPostsDto>> getPostsByUsers(@RequestParam("id") List<Integer> ids) {
+    public ResponseEntity<List<UserPostsDto>> getPostsByUsers(
+            @RequestParam("id")
+            @NotEmpty(message = "список id пользователей не может быть пустым")
+            List<
+                @NotNull(message = "id пользователя не может быть null")
+                @Min(value = 1, message = "id пользователя должен быть 1 и более")
+                Integer
+            > ids
+    ) {
         List<UserPostsDto> postsDtos = postService.getUserPostsDtosByUsers(ids);
         return ResponseEntity.ok(postsDtos);
     }
 
     @PostMapping
-    public ResponseEntity<Post> save(@RequestBody Post post) {
+    @Validated(Operation.OnCreate.class)
+    public ResponseEntity<Post> save(@Valid @RequestBody Post post) {
         if (postService.save(post)) {
             var uri = ServletUriComponentsBuilder
                     .fromCurrentRequest()
@@ -53,7 +65,8 @@ public class PostController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody Post post) {
+    @Validated(Operation.OnUpdate.class)
+    public ResponseEntity<Void> update(@Valid @RequestBody Post post) {
         if (postService.update(post)) {
             return ResponseEntity.ok().build();
         }
@@ -61,7 +74,8 @@ public class PostController {
     }
 
     @PatchMapping
-    public ResponseEntity<Void> change(@RequestBody Post post) {
+    @Validated(Operation.OnUpdate.class)
+    public ResponseEntity<Void> change(@Valid @RequestBody Post post) {
         if (postService.update(post)) {
             return ResponseEntity.ok().build();
         }
@@ -69,7 +83,10 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeById(@PathVariable("id") int id) {
+    public ResponseEntity<Void> removeById(@PathVariable("id")
+                                           @NotNull
+                                           @Min(value = 1, message = "номер ресурса должен быть 1 и более")
+                                           int id) {
         if (postService.deleteById(id)) {
             return ResponseEntity.noContent().build();
         }

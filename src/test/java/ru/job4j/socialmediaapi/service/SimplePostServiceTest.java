@@ -53,10 +53,11 @@ class SimplePostServiceTest {
     }
 
     private User createUser(int idx) {
-        var user = new User(null, "email" + idx, "password" + idx, "name" + idx, new HashSet<>(), new HashSet<>());
+        var user = new User(null, "email@email.com" + idx, "password" + idx, "name" + idx, new HashSet<>(),
+                new HashSet<>());
         userService.save(user);
         return userService.findAll().stream()
-                .filter(u -> u.getEmail().equals("email" + idx))
+                .filter(u -> u.getEmail().equals("email@email.com" + idx))
                 .findFirst()
                 .orElseThrow();
     }

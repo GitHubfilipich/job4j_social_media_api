@@ -57,9 +57,9 @@ class FriendRequestRepositoryTest {
     private List<FriendRequest> getFriendRequests(int count) {
         var friendRequests = new ArrayList<FriendRequest>();
         for (int i = 0; i < count; i++) {
-            var user1 = new User(null, "email1" + i, "password1" + i, "name1" + i, Set.of(), Set.of());
+            var user1 = new User(null, "email1@email.com" + i, "password1" + i, "name1" + i, Set.of(), Set.of());
             userRepository.save(user1);
-            var user2 = new User(null, "email2" + i, "password2" + i, "name2" + i, Set.of(), Set.of());
+            var user2 = new User(null, "email2@email.com" + i, "password2" + i, "name2" + i, Set.of(), Set.of());
             userRepository.save(user2);
             var friendRequest = new FriendRequest(null, user1, user2, RequestStatus.PENDING, LocalDateTime.now());
             friendRequests.add(friendRequest);
