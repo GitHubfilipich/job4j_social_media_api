@@ -1,12 +1,12 @@
 package ru.job4j.socialmediaapi.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.validation.annotation.Validated;
-import ru.job4j.socialmediaapi.model.validation.Operation;
+import ru.job4j.socialmediaapi.model.validation.ValidOperation;
 
 import java.util.Set;
 
@@ -17,21 +17,26 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "media_user")
+@Schema(description = "User Model Information")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull(message = "ID не может быть null при обновлении",
-            groups = {Operation.OnUpdate.class, Operation.OnDelete.class})
+            groups = {ValidOperation.OnUpdate.class, ValidOperation.OnDelete.class})
+    @Schema(description = "User ID", example = "1")
     private Integer id;
 
     @NotBlank(message = "Email не может быть пустым")
     @Email(message = "Email должен быть валидным")
+    @Schema(description = "User email", example = "email@email.com")
     private String email;
 
     @NotBlank(message = "Пароль не может быть пустым")
+    @Schema(description = "User password", example = "qwerty123")
     private String password;
 
     @NotBlank(message = "Имя не может быть пустым")
+    @Schema(description = "User name", example = "Ivan")
     private String name;
 
     @ManyToMany
@@ -40,6 +45,9 @@ public class User {
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "friend_id")}
     )
+    @Schema(description = "User friends",
+            example = "[{\"id\":2,\"email\":\"friend@email.com\",\"password\":\"pass123\",\"name\":\"Petr\"}, "
+                    + "{\"id\":3,\"email\":\"friend2@email.com\",\"password\":\"pass1234\",\"name\":\"Nick\"}]")
     private Set<User> friends;
 
     @ManyToMany
@@ -48,5 +56,8 @@ public class User {
             joinColumns = {@JoinColumn(name = "subscriber_id")},
             inverseJoinColumns = {@JoinColumn(name = "publisher_id")}
     )
+    @Schema(description = "User subscriptions",
+            example = "[{\"id\":4,\"email\":\"sub@email.com\",\"password\":\"pass456\",\"name\":\"Olga\"}, "
+                    + "{\"id\":5,\"email\":\"friend3@email.com\",\"password\":\"pass12345\",\"name\":\"John\"}]")
     private Set<User> subscriptions;
 }
