@@ -32,8 +32,10 @@ class MessageRepositoryTest {
     private List<Message> getMessages(int count) {
         var messages = new ArrayList<Message>();
         for (int i = 0; i < count; i++) {
-            var author = new User(null, "author" + i + "@mail.com", "pass" + i, "author" + i, Set.of(), Set.of());
-            var receiver = new User(null, "receiver" + i + "@mail.com", "pass" + i, "receiver" + i, Set.of(), Set.of());
+            var author = new User(null, "author" + i + "@mail.com", "pass" + i, "author" + i,
+                    Set.of(), Set.of(), Set.of());
+            var receiver = new User(null, "receiver" + i + "@mail.com", "pass" + i, "receiver" + i,
+                    Set.of(), Set.of(), Set.of());
             userRepository.save(author);
             userRepository.save(receiver);
             var message = new Message(null, author, receiver, "content" + i, LocalDateTime.now());
@@ -61,7 +63,8 @@ class MessageRepositoryTest {
                 .usingRecursiveComparison()
                 .withComparatorForType(Comparator.comparing((LocalDateTime dt) -> dt.truncatedTo(ChronoUnit.SECONDS)),
                         LocalDateTime.class)
-                .ignoringFields("author.friends", "author.subscriptions", "receiver.friends", "receiver.subscriptions")
+                .ignoringFields("author.friends", "author.subscriptions", "author.roles",
+                        "receiver.friends", "receiver.subscriptions", "receiver.roles")
                 .isEqualTo(message);
     }
 
@@ -81,7 +84,8 @@ class MessageRepositoryTest {
                 .usingRecursiveComparison()
                 .withComparatorForType(Comparator.comparing((LocalDateTime dt) -> dt.truncatedTo(ChronoUnit.SECONDS)),
                         LocalDateTime.class)
-                .ignoringFields("author.friends", "author.subscriptions", "receiver.friends", "receiver.subscriptions")
+                .ignoringFields("author.friends", "author.subscriptions", "author.roles",
+                        "receiver.friends", "receiver.subscriptions", "receiver.roles")
                 .isEqualTo(message);
     }
 

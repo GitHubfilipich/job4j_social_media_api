@@ -50,16 +50,19 @@ class FriendRequestRepositoryTest {
                 .usingRecursiveComparison()
                 .withComparatorForType(Comparator.comparing((LocalDateTime dt) -> dt.truncatedTo(ChronoUnit.SECONDS)),
                         LocalDateTime.class)
-                .ignoringFields("author.friends", "author.subscriptions", "receiver.friends", "receiver.subscriptions")
+                .ignoringFields("author.friends", "author.subscriptions", "author.roles",
+                        "receiver.friends", "receiver.subscriptions", "receiver.roles")
                 .isEqualTo(friendRequest);
     }
 
     private List<FriendRequest> getFriendRequests(int count) {
         var friendRequests = new ArrayList<FriendRequest>();
         for (int i = 0; i < count; i++) {
-            var user1 = new User(null, "email1@email.com" + i, "password1" + i, "name1" + i, Set.of(), Set.of());
+            var user1 = new User(null, "email1@email.com" + i, "password1" + i, "name1" + i,
+                    Set.of(), Set.of(), Set.of());
             userRepository.save(user1);
-            var user2 = new User(null, "email2@email.com" + i, "password2" + i, "name2" + i, Set.of(), Set.of());
+            var user2 = new User(null, "email2@email.com" + i, "password2" + i, "name2" + i,
+                    Set.of(), Set.of(), Set.of());
             userRepository.save(user2);
             var friendRequest = new FriendRequest(null, user1, user2, RequestStatus.PENDING, LocalDateTime.now());
             friendRequests.add(friendRequest);
@@ -84,7 +87,8 @@ class FriendRequestRepositoryTest {
                 .usingRecursiveComparison()
                 .withComparatorForType(Comparator.comparing((LocalDateTime dt) -> dt.truncatedTo(ChronoUnit.SECONDS)),
                         LocalDateTime.class)
-                .ignoringFields("author.friends", "author.subscriptions", "receiver.friends", "receiver.subscriptions")
+                .ignoringFields("author.friends", "author.subscriptions", "author.roles",
+                        "receiver.friends", "receiver.subscriptions", "receiver.roles")
                 .isEqualTo(friendRequest);
     }
 

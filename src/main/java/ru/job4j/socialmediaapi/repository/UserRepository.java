@@ -1,6 +1,7 @@
 package ru.job4j.socialmediaapi.repository;
 
 import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -9,7 +10,7 @@ import ru.job4j.socialmediaapi.model.User;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserRepository extends ListCrudRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("""
             select user from User user
             where user.email = :email and user.password = :password
@@ -43,4 +44,10 @@ public interface UserRepository extends ListCrudRepository<User, Integer> {
     @EntityGraph(attributePaths = {"friends", "subscriptions"})
     @Query("SELECT user FROM User user WHERE user.id = :id")
     Optional<User> findByIdWithFriendsAndSubscriptions(@Param("id") int id);
+
+    Optional<User> findByName(String name);
+
+    boolean existsByName(String name);
+
+    boolean existsByEmail(String email);
 }

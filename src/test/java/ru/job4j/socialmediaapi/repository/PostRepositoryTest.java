@@ -32,7 +32,7 @@ class PostRepositoryTest {
         var posts = new ArrayList<Post>();
         for (int i = 0; i < count; i++) {
             var user = new User(null, "email@email.com" + i, "password" + i, "name" + i, new HashSet<>(),
-                    new HashSet<>());
+                    new HashSet<>(), new HashSet<>());
             userRepository.save(user);
             var post = new Post(null, user, "title" + i, "content" + i, Set.of(), LocalDateTime.now());
             posts.add(post);
@@ -59,7 +59,7 @@ class PostRepositoryTest {
                 .usingRecursiveComparison()
                 .withComparatorForType(Comparator.comparing((LocalDateTime dt) -> dt.truncatedTo(ChronoUnit.SECONDS)),
                         LocalDateTime.class)
-                .ignoringFields("author.friends", "author.subscriptions", "images")
+                .ignoringFields("author.friends", "author.subscriptions", "author.roles", "images")
                 .isEqualTo(post);
     }
 
@@ -79,7 +79,7 @@ class PostRepositoryTest {
                 .usingRecursiveComparison()
                 .withComparatorForType(Comparator.comparing((LocalDateTime dt) -> dt.truncatedTo(ChronoUnit.SECONDS)),
                         LocalDateTime.class)
-                .ignoringFields("author.friends", "author.subscriptions", "images")
+                .ignoringFields("author.friends", "author.subscriptions", "author.roles", "images")
                 .isEqualTo(post);
     }
 
@@ -145,7 +145,7 @@ class PostRepositoryTest {
                 .usingRecursiveComparison()
                 .withComparatorForType(Comparator.comparing((LocalDateTime dt) -> dt.truncatedTo(ChronoUnit.SECONDS)),
                         LocalDateTime.class)
-                .ignoringFields("author.friends", "author.subscriptions", "images")
+                .ignoringFields("author.friends", "author.subscriptions", "author.roles", "images")
                 .isEqualTo(posts.subList(0, 2));
     }
 
@@ -169,7 +169,7 @@ class PostRepositoryTest {
                 .usingRecursiveComparison()
                 .withComparatorForType(Comparator.comparing((LocalDateTime dt) -> dt.truncatedTo(ChronoUnit.SECONDS)),
                         LocalDateTime.class)
-                .ignoringFields("author.friends", "author.subscriptions", "images")
+                .ignoringFields("author.friends", "author.subscriptions", "author.roles", "images")
                 .isEqualTo(posts.subList(1, 3));
     }
 

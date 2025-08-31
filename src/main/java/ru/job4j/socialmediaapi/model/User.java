@@ -11,8 +11,8 @@ import ru.job4j.socialmediaapi.model.validation.ValidOperation;
 import java.util.Set;
 
 @Data
-@ToString(exclude = {"friends", "subscriptions"})
-@EqualsAndHashCode(exclude = {"friends", "subscriptions"})
+@ToString(exclude = {"friends", "subscriptions", "roles"})
+@EqualsAndHashCode(exclude = {"friends", "subscriptions", "roles"})
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -60,4 +60,9 @@ public class User {
             example = "[{\"id\":4,\"email\":\"sub@email.com\",\"password\":\"pass456\",\"name\":\"Olga\"}, "
                     + "{\"id\":5,\"email\":\"friend3@email.com\",\"password\":\"pass12345\",\"name\":\"John\"}]")
     private Set<User> subscriptions;
+
+    @ManyToMany
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
 }

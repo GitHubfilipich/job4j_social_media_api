@@ -26,7 +26,7 @@ class UserRepositoryTest {
         var users = new ArrayList<User>();
         for (int i = 0; i < count; i++) {
             var user = new User(null, "email@email.com" + i, "password" + i, "name" + i, new HashSet<>(),
-                    new HashSet<>());
+                    new HashSet<>(), new HashSet<>());
             users.add(user);
         }
         return users;
@@ -49,7 +49,7 @@ class UserRepositoryTest {
                 .hasSize(1)
                 .first()
                 .usingRecursiveComparison()
-                .ignoringFields("friends", "subscriptions")
+                .ignoringFields("friends", "subscriptions", "roles")
                 .isEqualTo(user);
     }
 
@@ -67,7 +67,7 @@ class UserRepositoryTest {
         assertThat(result).isNotEmpty();
         assertThat(result.get())
                 .usingRecursiveComparison()
-                .ignoringFields("friends", "subscriptions")
+                .ignoringFields("friends", "subscriptions", "roles")
                 .isEqualTo(user);
     }
 

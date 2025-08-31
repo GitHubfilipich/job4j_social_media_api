@@ -54,7 +54,7 @@ class SimplePostServiceTest {
 
     private User createUser(int idx) {
         var user = new User(null, "email@email.com" + idx, "password" + idx, "name" + idx, new HashSet<>(),
-                new HashSet<>());
+                new HashSet<>(), new HashSet<>());
         userService.save(user);
         return userService.findAll().stream()
                 .filter(u -> u.getEmail().equals("email@email.com" + idx))
@@ -91,7 +91,7 @@ class SimplePostServiceTest {
                 .usingRecursiveComparison()
                 .withComparatorForType(Comparator.comparing((LocalDateTime dt) -> dt.truncatedTo(ChronoUnit.SECONDS)),
                         LocalDateTime.class)
-                .ignoringFields("images", "author.friends", "author.subscriptions")
+                .ignoringFields("images", "author.friends", "author.subscriptions", "author.roles")
                 .isEqualTo(post);
     }
 
@@ -114,7 +114,7 @@ class SimplePostServiceTest {
                 .usingRecursiveComparison()
                 .withComparatorForType(Comparator.comparing((LocalDateTime dt) -> dt.truncatedTo(ChronoUnit.SECONDS)),
                         LocalDateTime.class)
-                .ignoringFields("images", "author.friends", "author.subscriptions")
+                .ignoringFields("images", "author.friends", "author.subscriptions", "author.roles")
                 .isEqualTo(post);
     }
 

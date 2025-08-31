@@ -12,4 +12,7 @@
     <include file="scripts/005_ddl_create_friend_request_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/006_ddl_create_user_friend_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/007_ddl_create_message_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/008_ddl_create_roles_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/009_ddl_create_user_roles_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/010_dml_insert_roles.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

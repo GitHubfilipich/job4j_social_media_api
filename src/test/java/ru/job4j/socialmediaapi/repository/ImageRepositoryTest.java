@@ -36,7 +36,7 @@ class ImageRepositoryTest {
     private List<Image> getImages(int count) {
         var images = new ArrayList<Image>();
         for (int i = 0; i < count; i++) {
-            var user = new User(null, "email@email.com" + i, "password" + i, "name" + i, Set.of(), Set.of());
+            var user = new User(null, "email@email.com" + i, "password" + i, "name" + i, Set.of(), Set.of(), Set.of());
             userRepository.save(user);
             var post = new Post(null, user, "title" + i, "content" + i, Set.of(), LocalDateTime.now());
             postRepository.save(post);
@@ -65,7 +65,7 @@ class ImageRepositoryTest {
                 .usingRecursiveComparison()
                 .withComparatorForType(Comparator.comparing((LocalDateTime dt) -> dt.truncatedTo(ChronoUnit.SECONDS)),
                         LocalDateTime.class)
-                .ignoringFields("post.author.friends", "post.author.subscriptions", "post.images")
+                .ignoringFields("post.author.friends", "post.author.subscriptions", "post.author.roles", "post.images")
                 .isEqualTo(image);
     }
 
@@ -85,7 +85,7 @@ class ImageRepositoryTest {
                 .usingRecursiveComparison()
                 .withComparatorForType(Comparator.comparing((LocalDateTime dt) -> dt.truncatedTo(ChronoUnit.SECONDS)),
                         LocalDateTime.class)
-                .ignoringFields("post.author.friends", "post.author.subscriptions", "post.images")
+                .ignoringFields("post.author.friends", "post.author.subscriptions", "post.author.roles", "post.images")
                 .isEqualTo(image);
     }
 
