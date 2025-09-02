@@ -1,6 +1,8 @@
 package ru.job4j.socialmediaapi.service.user;
 
 import org.springframework.transaction.annotation.Transactional;
+import ru.job4j.socialmediaapi.dto.request.SignupRequestDTO;
+import ru.job4j.socialmediaapi.dto.response.RegisterDTO;
 import ru.job4j.socialmediaapi.model.User;
 
 import java.util.List;
@@ -26,4 +28,6 @@ public interface UserService {
     Optional<User> findByIdWithFriendsAndSubscriptions(int id);
 
     boolean deleteById(int id);
+
+    RegisterDTO signUp(SignupRequestDTO signUpRequest);
 }

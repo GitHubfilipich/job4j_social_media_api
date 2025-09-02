@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -19,6 +20,7 @@ import ru.job4j.socialmediaapi.model.User;
 import ru.job4j.socialmediaapi.model.validation.ValidOperation;
 import ru.job4j.socialmediaapi.service.user.UserService;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @Tag(name = "UserController", description = "UserController management APIs")
 @Validated
 @AllArgsConstructor
@@ -37,6 +39,7 @@ public class UserController {
                     mediaType = "application/json")}),
             @ApiResponse(responseCode = "404", content = {@Content(schema = @Schema())})})
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or #id == principal.id")
     public ResponseEntity<User> get(@PathVariable("id")
                                     @NotNull
                                     @Min(value = 1, message = "номер ресурса должен быть 1 и более")
@@ -57,6 +60,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", content = {@Content(schema = @Schema())})})
     @PostMapping
     @Validated(ValidOperation.OnCreate.class)
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<User> save(@Valid @RequestBody User user) {
         if (userService.save(user)) {
             var uri = ServletUriComponentsBuilder
@@ -81,6 +85,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", content = {@Content(schema = @Schema())})})
     @PutMapping
     @Validated(ValidOperation.OnUpdate.class)
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or #user.id == principal.id")
     public ResponseEntity<Void> update(@Valid @RequestBody User user) {
         if (userService.update(user)) {
             return ResponseEntity.ok().build();
@@ -98,6 +103,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", content = {@Content(schema = @Schema())})})
     @PatchMapping
     @Validated(ValidOperation.OnUpdate.class)
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or #user.id == principal.id")
     public ResponseEntity<Void> change(@Valid @RequestBody User user) {
         if (userService.update(user)) {
             return ResponseEntity.ok().build();
@@ -114,6 +120,7 @@ public class UserController {
             @ApiResponse(responseCode = "204", content = {@Content(schema = @Schema())}),
             @ApiResponse(responseCode = "404", content = {@Content(schema = @Schema())})})
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> removeById(@PathVariable("id")
                                            @NotNull
                                            @Min(value = 1, message = "номер ресурса должен быть 1 и более")
